@@ -11,9 +11,9 @@ public class PlayerShooting : MonoBehaviour {
     // Use this for initialization
     void Start () {
         Transform[] children = transform.GetComponentsInChildren<Transform>();
-        portGunOffset = children[1].position;
-        starboardGunOffset = children[2].position;
-        bowGunOffset = children[3].position;
+        portGunOffset = children[1].position - transform.position;
+        starboardGunOffset = children[2].position - transform.position;
+        bowGunOffset = children[3].position - transform.position;
     }
 	
 	// Update is called once per frame
@@ -25,14 +25,14 @@ public class PlayerShooting : MonoBehaviour {
             if (alternatingGun)
             {
                 Vector3 position = transform.position + (transform.rotation * portGunOffset);
-                Instantiate(bulletPrefab, position, transform.rotation);
-                Debug.Log("port: " + portGunOffset.ToString());
+                GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, position, transform.rotation);
+                bulletGO.layer = gameObject.layer;
             }
             else
             {
                 Vector3 position = transform.position + (transform.rotation * starboardGunOffset);
-                Instantiate(bulletPrefab, position, transform.rotation);
-                Debug.Log("starboard: " + starboardGunOffset.ToString());
+                GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, position, transform.rotation);
+                bulletGO.layer = gameObject.layer;
             }
             alternatingGun = !alternatingGun;
         }

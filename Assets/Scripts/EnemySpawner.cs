@@ -6,7 +6,7 @@ public class EnemySpawner : MonoBehaviour {
     float enemyRate = 5.0f;
     float nextEnemy = 1;
     public GameObject enemyPrefab;
-    float spawnDistance = 20f;
+    public float spawnDistance = 20f;
 	// Use this for initialization
 	void Start () {
 		

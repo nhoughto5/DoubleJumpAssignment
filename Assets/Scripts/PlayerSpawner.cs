@@ -18,7 +18,13 @@ class PlayerSpawner : MonoBehaviour
     {
         --numLives;
         respawnTimer = 1.0f;
+        
+
+        //Get the smaller of the screen dimensions
+        Vector3 screenPosition = Camera.main.ScreenToWorldPoint(new Vector3(Random.Range(0, 0.45f * Screen.width), Random.Range(0, 0.45f * Screen.height), Camera.main.farClipPlane / 2));
+        screenPosition.z = 0;
         playerInstance = (GameObject)Instantiate(playerPrefab, transform.position, Quaternion.identity);
+        playerInstance.transform.position = screenPosition;
     }
 
     private void Update()

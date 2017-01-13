@@ -29,7 +29,8 @@ public class EnemyShooting : MonoBehaviour {
         }
 
         coolDownTimer -= Time.deltaTime;
-        if (coolDownTimer <= 0 && player != null && Vector3.Distance(transform.position, player.position) < fireDistance)
+        float randomFire = Random.Range(fireDistance/2, fireDistance);
+        if (coolDownTimer <= 0 && player != null && Vector3.Distance(transform.position, player.position) < randomFire)
         {
             coolDownTimer = fireDelay;
             Vector3 position = transform.position + (transform.rotation * gunOffset);

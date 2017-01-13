@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DamageHandler : MonoBehaviour
@@ -9,6 +10,7 @@ public class DamageHandler : MonoBehaviour
     public float invulnerableLength = 0.0f;
     int objectDefaultLayer;
     SpriteRenderer spriteRend;
+    public GameObject ExplosionGO;
 
     public Sprite spriteDamaged;
 
@@ -29,6 +31,11 @@ public class DamageHandler : MonoBehaviour
         }
     }
 
+    void PlayExplosion(Vector3 collisionLocation)
+    {
+        GameObject expl = (GameObject)Instantiate(ExplosionGO);
+        expl.transform.position = collisionLocation;
+    }
     //Game Object takes damage
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -36,10 +43,15 @@ public class DamageHandler : MonoBehaviour
         --health;
         invulnerableTimer = invulnerableLength;
         gameObject.layer = LayerMask.NameToLayer("Invulnerable");
+
         //If this is the player
         if (gameObject.tag.Equals("Player") && health == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = spriteDamaged;
+        }
+        if (!gameObject.tag.Equals("Laser"))
+        {
+            PlayExplosion(collision.transform.position);
         }
     }
     private void Update()

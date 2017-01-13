@@ -14,7 +14,12 @@ public class SelfDestruct : MonoBehaviour {
         timer -= Time.deltaTime;
         if (timer <= 0)
         {
-            Destroy(gameObject);
+            DestroyGameObject();
         }
 	}
+
+    void DestroyGameObject()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -7,16 +7,20 @@ public class PlayerShooting : MonoBehaviour {
     float fireDelay = 0.25f;
     public GameObject bulletPrefab;
     private bool alternatingGun = false;
-    Vector3 portGunOffset, starboardGunOffset, bowGunOffset;
-    // Use this for initialization
+    Vector3 portGunOffset, starboardGunOffset; 
+    //Vector3 bowGunOffset;
+    int bulletLayer;
+
+    
     void Start () {
         Transform[] children = transform.GetComponentsInChildren<Transform>();
         portGunOffset = children[1].position - transform.position;
         starboardGunOffset = children[2].position - transform.position;
-        bowGunOffset = children[3].position - transform.position;
+        //bowGunOffset = children[3].position - transform.position;
+        bulletLayer = gameObject.layer;
     }
 	
-	// Update is called once per frame
+	
 	void Update () {
         coolDownTimer -= Time.deltaTime;
         if (Input.GetButton("Fire1") && coolDownTimer <= 0)
@@ -26,13 +30,13 @@ public class PlayerShooting : MonoBehaviour {
             {
                 Vector3 position = transform.position + (transform.rotation * portGunOffset);
                 GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, position, transform.rotation);
-                bulletGO.layer = gameObject.layer;
+                bulletGO.layer = bulletLayer;
             }
             else
             {
                 Vector3 position = transform.position + (transform.rotation * starboardGunOffset);
                 GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, position, transform.rotation);
-                bulletGO.layer = gameObject.layer;
+                bulletGO.layer = bulletLayer;
             }
             alternatingGun = !alternatingGun;
         }

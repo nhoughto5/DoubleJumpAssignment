@@ -39,16 +39,16 @@ class PlayerSpawner : MonoBehaviour
         }
     }
 
-    private void OnGUI()
-    {
-        if (numLives > 0 || playerInstance != null)
-        {
-            GUI.Label(new Rect(0, 0, 100, 50), "Lives: " + numLives);
-        }
-        else
-        {
-            GUI.Label(new Rect(Screen.width / 2 - 50, Screen.height/2 - 25, 100, 50), "Game Over");
-        }
-    }
+    //private void OnGUI()
+    //{
+    //    if (numLives > 0 || playerInstance != null)
+    //    {
+    //        GUI.Label(new Rect(0, 0, 100, 50), "Lives: " + numLives);
+    //    }
+    //    else
+    //    {
+    //        GUI.Label(new Rect(Screen.width / 2 - 50, Screen.height/2 - 25, 100, 50), "Game Over");
+    //    }
+    //}
 }
 

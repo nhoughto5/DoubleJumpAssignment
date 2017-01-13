@@ -6,7 +6,7 @@ public class EnemyShooting : MonoBehaviour {
     Vector3 gunOffset;
     float coolDownTimer = 0;
     public GameObject bulletPrefab;
-    float fireDelay = 0.5f;
+    float fireDelay = 1.5f;
     int bulletLayer;
     Transform player;
     public float fireDistance = 3.0f;

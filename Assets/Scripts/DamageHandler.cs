@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class DamageHandler : MonoBehaviour
 {
-    public int health = 1;
+    public float health = 1.0f, damageSpriteHealthLevel = 0.25f;
+    public float enemyLaserDamage = 0.25f, playerLaserDamage = 1.0f;
     float invulnerableTimer = 0;
     public float invulnerableLength = 0.0f;
     int objectDefaultLayer;
@@ -13,7 +14,20 @@ public class DamageHandler : MonoBehaviour
     public GameObject ExplosionGO;
 
     public Sprite spriteDamaged;
+    private GameManager mGameManager;
 
+    //Used to create a GameManager obect which can be used to call methods.
+    private GameManager mGM
+    {
+        get
+        {
+            if (mGameManager == null)
+            {
+                mGameManager = (GameManager)FindObjectOfType(typeof(GameManager));
+            }
+            return mGameManager;
+        }
+    }
 
     private void Start()
     {
@@ -40,20 +54,46 @@ public class DamageHandler : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
-        --health;
+        
         invulnerableTimer = invulnerableLength;
         gameObject.layer = LayerMask.NameToLayer("Invulnerable");
 
-        //If this is the player
-        if (gameObject.tag.Equals("Player") && health == 1)
+        //Deal with the collision from the perspective of the ships
+        if (!gameObject.tag.Equals("Laser"))
+        {
+            //Explosions should not play when it is a laser/laser collision
+            PlayExplosion(collision.transform.position);
+            //Collision between player's laser and an enemy
+            if (gameObject.gameObject.tag.Equals("Enemy") && collision.gameObject.tag.Equals("Laser"))
+            {
+                health -= playerLaserDamage;
+                addPoint();
+            }
+            //Collision between enemy's laser and the player
+            if (gameObject.gameObject.tag.Equals("Player") && collision.gameObject.tag.Equals("Laser"))
+            {
+                health -= enemyLaserDamage;
+                mGM.setPlayerHealth(health);
+            }
+
+            //If Collision between enemy and player
+            if (gameObject.gameObject.tag.Equals("Player") && collision.gameObject.tag.Equals("Enemy"))
+            {
+                health = 0.0f;
+                mGM.setPlayerHealth(health);
+                Destroy(collision.gameObject);
+                mGM.enemyDied();
+                mGM.addPoint();
+            }
+
+        }
+        //If this is the player and is on the final hit point show the damaged sprite.
+        if (gameObject.tag.Equals("Player") && health <= damageSpriteHealthLevel)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = spriteDamaged;
         }
-        if (!gameObject.tag.Equals("Laser"))
-        {
-            PlayExplosion(collision.transform.position);
-        }
     }
+
     private void Update()
     {
         invulnerableTimer -= Time.deltaTime;
@@ -80,6 +120,28 @@ public class DamageHandler : MonoBehaviour
     }
     private void Die()
     {
+        //Collision between enemy laser and player
+        if (gameObject.tag.Equals("Player"))
+        {
+            lostLife();
+        }
+        if (gameObject.tag.Equals("Enemy"))
+        {
+            enemyDied();
+        }
         Destroy(gameObject);
+    }
+
+    private void lostLife()
+    {
+        mGM.lostALife();
+    }
+    private void addPoint()
+    {
+        mGM.addPoint();
+    }
+    private void enemyDied()
+    {
+        mGM.enemyDied();
     }
 }

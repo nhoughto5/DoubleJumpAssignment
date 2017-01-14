@@ -9,6 +9,22 @@ class PlayerSpawner : MonoBehaviour
     GameObject playerInstance;
     float respawnTimer;
     public int numLives = 4;
+
+    private GameManager mGameManager;
+
+    //Used to create a GameManager obect which can be used to call methods.
+    private GameManager mGM
+    {
+        get
+        {
+            if (mGameManager == null)
+            {
+                mGameManager = (GameManager)FindObjectOfType(typeof(GameManager));
+            }
+            return mGameManager;
+        }
+    }
+
     private void Start()
     {
         SpawnPlayer();
@@ -21,10 +37,11 @@ class PlayerSpawner : MonoBehaviour
         
 
         //Get the smaller of the screen dimensions
-        Vector3 screenPosition = Camera.main.ScreenToWorldPoint(new Vector3(Random.Range(0, 0.45f * Screen.width), Random.Range(0, 0.45f * Screen.height), Camera.main.farClipPlane / 2));
+        Vector3 screenPosition = Camera.main.ScreenToWorldPoint(new Vector3(Random.Range(0, Screen.width), Random.Range(0, 0.7f * Screen.height), Camera.main.farClipPlane / 2));
         screenPosition.z = 0;
         playerInstance = (GameObject)Instantiate(playerPrefab, transform.position, Quaternion.identity);
         playerInstance.transform.position = screenPosition;
+        mGM.setPlayerHealth(1.0f);
     }
 
     private void Update()

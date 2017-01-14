@@ -2,31 +2,58 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemySpawner : MonoBehaviour {
-    float enemyRate = 5.0f;
-    float nextEnemy = 1;
+public class EnemySpawner : MonoBehaviour
+{
+    float enemyRate = 10.0f;
+    float timeUntilSpawn = 1;
     public GameObject enemyPrefab;
     public float spawnDistance = 20f;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        nextEnemy -= Time.deltaTime;
-        if (nextEnemy <= 0)
+    private GameManager mGameManager;
+
+    //Used to create a GameManager obect which can be used to call methods.
+    private GameManager mGM
+    {
+        get
         {
-            nextEnemy = enemyRate;
-            enemyRate *= 0.9f;
-            if (enemyRate < 2)
+            if (mGameManager == null)
             {
-                enemyRate = 2;
+                mGameManager = (GameManager)FindObjectOfType(typeof(GameManager));
             }
-            Vector3 offset = Random.onUnitSphere;
-            offset.z = 0;
-            offset = offset.normalized * spawnDistance;
-            Instantiate(enemyPrefab, transform.position + offset, Quaternion.identity);
+            return mGameManager;
         }
-	}
+    }
+    // Use this for initialization
+    void Start()
+    {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        timeUntilSpawn -= Time.deltaTime;
+        if (timeUntilSpawn <= 0)
+        {
+
+            addEnemyAndIncreaseRate();
+        }
+    }
+
+    private void addEnemyAndIncreaseRate()
+    {
+        timeUntilSpawn = enemyRate;
+        enemyRate *= 0.9f;
+        if (enemyRate < 2)
+        {
+            enemyRate = 2;
+        }
+        addEnemy();
+    }
+    private void addEnemy()
+    {
+        Vector3 offset = Random.onUnitSphere;
+        offset.z = 0;
+        offset = offset.normalized * spawnDistance;
+        Instantiate(enemyPrefab, transform.position + offset, Quaternion.identity);
+        mGM.addEnemy();
+    }
 }

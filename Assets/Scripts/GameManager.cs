@@ -1,20 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class GameManager : MonoBehaviour {
 
     private int score = 0;
-    public int lives = 4, enemyCount = 0;
+    public const int startingLives = 3;
+    public int currentLives = startingLives, enemyCount = 0;
     public Text scoreTxt, livesTxt, enemyCountTxt;
     private float playerHealth;
-    public enum GameManagerState
-    {
-        Opening, Gameplay, GameOver
-    }
-
     private HealthBar healthBar;
+    public GameObject gameOverMenu;
 
     //Used to create a GameManager obect which can be used to call methods.
     private HealthBar hB
@@ -28,33 +23,28 @@ public class GameManager : MonoBehaviour {
             return healthBar;
         }
     }
+    private PlayerSpawner playerSpawner;
 
-    GameManagerState GMState;
-    // Use this for initialization
-    void Start () {
-        GMState = GameManagerState.Opening;
-        scoreTxt.text = score.ToString();
-        livesTxt.text = lives.ToString();
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        
-	}
-    void UpdateGameManagerState()
+    //Used to create a GameManager obect which can be used to call methods.
+    private PlayerSpawner spawner
     {
-        switch (GMState)
+        get
         {
-            case GameManagerState.Opening:
-                break;
-            case GameManagerState.Gameplay:
-                break;
-            case GameManagerState.GameOver:
-                break;
-            default:
-                break;
+            if (playerSpawner == null)
+            {
+                playerSpawner = (PlayerSpawner)FindObjectOfType(typeof(PlayerSpawner));
+            }
+            return playerSpawner;
         }
     }
+    private void Start()
+    {
+        Restart();
+    }
+    // Update is called once per frame
+    void Update () {
+
+	}
     private void handleHealth()
     {
         hB.setFillAmount(playerHealth);
@@ -72,10 +62,46 @@ public class GameManager : MonoBehaviour {
 
     public void lostALife()
     {
-        --lives;
-        livesTxt.text = lives.ToString();
+        --currentLives;
+        livesTxt.text = currentLives.ToString();
+        if (currentLives <= 0)
+        {
+            GameOver();
+        }
+    }
+    private void GameOver()
+    {
+        spawner.setPlaying(false);
+        gameOverMenu.SetActive(true);
+    }
+    private void DeactivateGameOverGUI()
+    {
+        gameOverMenu.SetActive(false);
+    }
+    public void Restart()
+    {
+        DeactivateGameOverGUI();
+        ResetGame();
+        spawner.SpawnPlayer();
+        spawner.setPlaying(true);
     }
 
+    private void ResetGame()
+    {
+        List<GameObject> enemies = findAllGameObjectsByLayer("Enemy");
+        foreach (GameObject e in enemies)
+        {
+            Destroy(e);
+        }
+        playerHealth = 1.0f;
+        handleHealth();
+        currentLives = startingLives;
+        score = 0;
+        enemyCount = 0;
+        enemyCountTxt.text = enemyCount.ToString();
+        livesTxt.text = currentLives.ToString();
+        scoreTxt.text = score.ToString();
+    }
     public void addEnemy()
     {
         ++enemyCount;
@@ -86,5 +112,20 @@ public class GameManager : MonoBehaviour {
     {
         --enemyCount;
         enemyCountTxt.text = enemyCount.ToString();
+    }
+
+    private List<GameObject> findAllGameObjectsByLayer(string layerName)
+    {
+        List<GameObject> objects = new List<GameObject>();
+        GameObject[] gos = GameObject.FindObjectsOfType(typeof(GameObject)) as GameObject[];
+        int layer = LayerMask.NameToLayer(layerName);
+        foreach (GameObject go in gos)
+        {
+            if (go.layer.Equals(layer))
+            {
+                objects.Add(go);
+            }
+        }
+        return objects;
     }
 }

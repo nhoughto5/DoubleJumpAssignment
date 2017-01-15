@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    float enemyRate = 10.0f;
+    float enemyRate = 8.0f;
+    private float speedUpRate = 0.7f;
     float timeUntilSpawn = 1;
     public GameObject enemyPrefab;
     public float spawnDistance = 20f;
@@ -41,7 +42,7 @@ public class EnemySpawner : MonoBehaviour
     private void addEnemyAndIncreaseRate()
     {
         timeUntilSpawn = enemyRate;
-        enemyRate *= 0.9f;
+        enemyRate *= speedUpRate;
         if (enemyRate < 2)
         {
             enemyRate = 2;

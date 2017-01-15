@@ -13,7 +13,20 @@ public class MenuCtrl : MonoBehaviour {
 	void Update () {
 		
 	}
+    private GameManager mGameManager;
 
+    //Used to create a GameManager obect which can be used to call methods.
+    private GameManager mGM
+    {
+        get
+        {
+            if (mGameManager == null)
+            {
+                mGameManager = (GameManager)FindObjectOfType(typeof(GameManager));
+            }
+            return mGameManager;
+        }
+    }
     public void loadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);

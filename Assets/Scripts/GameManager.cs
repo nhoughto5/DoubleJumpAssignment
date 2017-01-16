@@ -1,7 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class GameManager : MonoBehaviour {
+/**
+ *  This class is the manager which intercommunicates with 
+ *  a series of other scripts to pass messages, handle
+ *  score, health, and spawning and handle the
+ *  Game Over state
+ * 
+ **/
+public class GameManager : MonoBehaviour
+{
 
     private int score = 0;
     public const int startingLives = 3;
@@ -23,9 +31,9 @@ public class GameManager : MonoBehaviour {
             return healthBar;
         }
     }
-    private PlayerSpawner playerSpawner;
 
-    //Used to create a GameManager obect which can be used to call methods.
+    //Used to create a PlayerSpawner obect which can be used to call methods.
+    private PlayerSpawner playerSpawner;
     private PlayerSpawner spawner
     {
         get
@@ -41,19 +49,18 @@ public class GameManager : MonoBehaviour {
     {
         Restart();
     }
-    // Update is called once per frame
-    void Update () {
 
-	}
     private void handleHealth()
     {
         hB.setFillAmount(playerHealth);
     }
+
     public void setPlayerHealth(float playerHealth_)
     {
         playerHealth = playerHealth_;
         handleHealth();
     }
+
     public void addPoint()
     {
         ++score;
@@ -69,15 +76,19 @@ public class GameManager : MonoBehaviour {
             GameOver();
         }
     }
+
+    // Stop the player spawner and show the game over menu
     private void GameOver()
     {
         spawner.setPlaying(false);
         gameOverMenu.SetActive(true);
     }
+
     private void DeactivateGameOverGUI()
     {
         gameOverMenu.SetActive(false);
     }
+
     public void Restart()
     {
         DeactivateGameOverGUI();

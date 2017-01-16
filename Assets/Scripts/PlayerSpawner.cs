@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * This class handles the creation of the player.
+ * It's methods are called by the GameManager class.
+ * Additionally it passes health information back.
+ * 
+ * It evaluates the size of the screen and chooses a random spawn location.
+ * 
+ **/
 class PlayerSpawner : MonoBehaviour
 {
 
@@ -24,15 +32,9 @@ class PlayerSpawner : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-    }
-
     public void SpawnPlayer()
     {
         respawnTimer = 1.0f;
-        
-
         //Get the smaller of the screen dimensions
         Vector3 screenPosition = Camera.main.ScreenToWorldPoint(new Vector3(Random.Range(0, Screen.width), Random.Range(0, 0.7f * Screen.height), Camera.main.farClipPlane / 2));
         screenPosition.z = 0;

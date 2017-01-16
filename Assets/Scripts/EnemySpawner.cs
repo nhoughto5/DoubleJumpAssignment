@@ -1,7 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/**
+ * This class handles the creation of enemies.
+ * Enemies are generated on a circle randomly with a radius larger than the camera space.
+ * This creates the perception that they are coming from random directions.
+ * 
+ * Enemies are generated on a timer. This timer slowly increases
+ * to make the game more difficult as it progresses.
+ * */
 public class EnemySpawner : MonoBehaviour
 {
     float enemyRate = 8.0f;
@@ -22,10 +29,6 @@ public class EnemySpawner : MonoBehaviour
             }
             return mGameManager;
         }
-    }
-    // Use this for initialization
-    void Start()
-    {
     }
 
     // Update is called once per frame
@@ -49,6 +52,7 @@ public class EnemySpawner : MonoBehaviour
         }
         addEnemy();
     }
+
     private void addEnemy()
     {
         Vector3 offset = Random.onUnitSphere;

@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+/**
+ * This class handles the damage computation for each game object.
+ * When the player reaches a certain health level the sprite is switched
+ * for the damaged version.
+ * */
 public class DamageHandler : MonoBehaviour
 {
     public float health = 1.0f, damageSpriteHealthLevel = 0.25f;
@@ -54,7 +58,7 @@ public class DamageHandler : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
-        
+
         invulnerableTimer = invulnerableLength;
         gameObject.layer = LayerMask.NameToLayer("Invulnerable");
 
@@ -63,12 +67,14 @@ public class DamageHandler : MonoBehaviour
         {
             //Explosions should not play when it is a laser/laser collision
             PlayExplosion(collision.transform.position);
+
             //Collision between player's laser and an enemy
             if (gameObject.gameObject.tag.Equals("Enemy") && collision.gameObject.tag.Equals("Laser"))
             {
                 health -= playerLaserDamage;
                 addPoint();
             }
+
             //Collision between enemy's laser and the player
             if (gameObject.gameObject.tag.Equals("Player") && collision.gameObject.tag.Equals("Laser"))
             {
@@ -107,7 +113,6 @@ public class DamageHandler : MonoBehaviour
         }
         else
         {
-            //This is all frame dependent
             if (spriteRend != null)
             {
                 spriteRend.enabled = !spriteRend.enabled;
